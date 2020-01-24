@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="us-ascii"?>
+
+<application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" id="application">
+
+  <!-- =============================================================== -->
+  <!-- =====                 JOB TEMPLATES                        ==== -->
+  <!-- =============================================================== -->
+
+  <jobTemplates>
+
+    <!-- Job template "GenerateFields" -->
+    <jobTemplate id="GenerateFields">
+        <streamingExecutable>/application/GenerateFields/generatefields.sh</streamingExecutable>
+        <defaultParameters>
+	    <!-- Script params -->
+	    <parameter id="url" abstract="WFS url to extract fields from" title="WFS url" scope="runtime">https://geoservices.informatievlaanderen.be/overdrachtdiensten/Landbgebrperc/wfs</parameter>
+	    <parameter id="layer" abstract="WFS layer to use" title="WFS layer" scope="runtime">Landbgebrperc:Lbgebrperc</parameter>
+	    <parameter id="minLat" abstract="BBOX latitude min" title="Minimum bbox latitude" scope="runtime">4.9623870849609375</parameter>
+	    <parameter id="minLon" abstract="BBOX longitude min" title="Minimum bbox longitude" scope="runtime">50.96404897546097</parameter>
+	    <parameter id="maxLat" abstract="BBOX latitude max" title="Maximum bbox latitude" scope="runtime">5.7012176513671875</parameter>
+	    <parameter id="maxLon" abstract="BBOX longitude max" title="Maximum bbox latitude" scope="runtime">51.29155294821564</parameter>
+	    <parameter id="groupCount" abstract="Number of groups to create features in" title="Number of groups" scope="runtime">5</parameter>
+	    <parameter id="maxSize" abstract="Maximum number of features to retrieve" title="Maximum features" scope="runtime">10</parameter>
+	    <parameter id="output" abstract="Output path to store results" title="Output path" scope="runtime">fields</parameter>
+        </defaultParameters>
+
+        <defaultJobconf>
+            <!--<property id="mapred.task.timeout">10000000</property>-->
+        </defaultJobconf>
+    </jobTemplate>
+
+    <!-- Job template "CalculatePhenology" -->
+    <jobTemplate id="CalculatePhenology">
+        <streamingExecutable>/application/Phenology/calculate.sh</streamingExecutable>
+        <defaultParameters>
+        </defaultParameters>
+
+        <defaultJobconf>
+           <!-- <property id="mapred.task.timeout">10000000</property>-->
+        </defaultJobconf>
+    </jobTemplate>
+    <!-- Job template "MergeFiles" -->
+    <jobTemplate id="MergeFiles">
+        <streamingExecutable>/application/MergeFiles/calculate.sh</streamingExecutable>
+        <defaultParameters>
+        </defaultParameters>
+        <defaultJobconf>
+            <property id="ciop.job.max.tasks">1</property>
+        </defaultJobconf>
+    </jobTemplate>
+
+  </jobTemplates>
+
+  <!-- =============================================================== -->
+  <!-- =====                     WORKFLOW                         ==== -->
+  <!-- =============================================================== -->
+
+  <workflow id="sentinel2-cropphenology" title="Sentinel2 Crop Phenology Workflow" abstract="Workflow that uses VITO timeseries component to calculate crop phenology parameters based on Sentinel2 timeseries">
+
+    <workflowVersion>1.0</workflowVersion>
+
+    <node id="GenerateFieldsNode">
+      <job id="GenerateFields"/>
+      <sources>
+       <source refid="file:urls">/application/inputs/list</source>
+      </sources>
+    </node>
+    <node id="CalculatePhenologyNode">
+      <job id="CalculatePhenology"/>
+      <sources>
+       <source refid="wf:node">GenerateFieldsNode</source>
+      </sources>
+    </node>
+    <node id="MergeFilesNode">
+      <job id="MergeFiles"/>
+      <sources>
+       <source refid="wf:node">CalculatePhenologyNode</source>
+      </sources>
+    </node>
+ 
+  </workflow>
+
+</application>
