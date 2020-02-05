@@ -36,7 +36,7 @@ function main() {
 
 	ciop-log "INFO" "	Execute phenology calculation"
 	docker run --rm  -v ${TMPDIR}:/tmp                                            \
-                vito-docker-private.artifactory.vgt.vito.be/nextgeoss-cropphenology:1.0.18           \
+                vito-docker-private.artifactory.vgt.vito.be/nextgeoss-cropphenology:1.0.19           \
                 python3 calculate_phenology_params_json.py -sS $SS -sE $SE -mS $MS -mE $ME -eS $ES -eE $EE -sT $ST -eT $ET -i /tmp/fields/$INPUT_FILENAME -o /tmp/shapes/$INPUT_BASENAME
 
 	echo "TMPDIR LISTING:"
