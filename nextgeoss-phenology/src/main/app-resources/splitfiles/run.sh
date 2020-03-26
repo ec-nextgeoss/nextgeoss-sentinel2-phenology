@@ -22,7 +22,7 @@ mkdir -p "$TMPDIR/$OUTPUT_DIR/result"
 
 ciop-log "INFO" "2. Checking mode $MODE"
 
-if [[ "$MODE" -eq "shapefile" ]]; then
+if [[ "$MODE" == "shapefile" ]]; then
 	ciop-log "INFO" "  Reading shapefile from input"
 	while read input
 	do

@@ -33,25 +33,35 @@ function main() {
 	ciop-log "INFO" "	Copy to local working dir"
 	mkdir -p "$INPUT_DIR"
 	GEOJSON=$(echo $INPUT_FILEPATH | ciop-copy -U -o $INPUT_DIR -)
+	
+	echo "TMPDIR INPUT"
+	ls -al $TMPDIR/input
 
 	ciop-log "INFO" "	Execute phenology calculation"
 	docker run --rm  -v ${TMPDIR}:/tmp                                            \
                 vito-docker-private.artifactory.vgt.vito.be/nextgeoss-cropphenology:1.0.19           \
-                python3 calculate_phenology_params_json.py -sS $SS -sE $SE -mS $MS -mE $ME -eS $ES -eE $EE -sT $ST -eT $ET -i /tmp/fields/$INPUT_FILENAME -o /tmp/shapes/$INPUT_BASENAME
+                python3 calculate_phenology_params_json.py -sS $SS -sE $SE -mS $MS -mE $ME -eS $ES -eE $EE -sT $ST -eT $ET -i /tmp/input/$INPUT_FILENAME -o /tmp/shapes/$INPUT_BASENAME
 
-	echo "TMPDIR LISTING:"
-	ls -a "$TMPDIR/shapes"
+	echo "TMPDIR OUTPUT:"
+	ls -al "$TMPDIR/shapes"
 
 }
 
 ciop-log "INFO" "Creating output directory"
 mkdir -p $TMPDIR/shapes
-
+mkdir -p $TMPDIR/input
+COUNT=1
 
 while read input
 do
 	ciop-log "INFO" "Received input file: ${input}"
-	main ${input}
+	DECODED_INPUT=$TMPDIR/input/fields_${COUNT}.json
+	echo $input | base64 --decode >> $DECODED_INPUT
+	ciop-log "INFO" "Input decoded to file ${DECODED_INPUT}"
+	cat ${DECODED_INPUT}
+	
+	COUNT+=1		
+	main ${DECODED_INPUT}
 done
 
 ciop-log "INFO" "Publishing results"

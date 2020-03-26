@@ -17,10 +17,9 @@ function main() {
 	FORMAT="`ciop-getparam format`"
 	
 	ciop-log "INFO" "Start merging files in $INPUT_DIR to $OUTPUT_DIR"
-	
-        docker run --rm -v ${TMPDIR}:/tmp                                            \
-                vito-docker-private.artifactory.vgt.vito.be/nextgeoss-cropphenology:1.0.19           \
-                python3 generate_phenology_output.py -i /tmp/input -o /tmp/output -f $FORMAT
+
+	source activate phenology
+	python ${_CIOP_APPLICATION_PATH}/mergefiles/merge.py -i $INPUT_DIR -o $OUTPUT_DIR -f $FORMAT -t $TMPDIR
 
         ciop-log "INFO" "Listing directory of $OUTPUT_DIR"
         ls -a $OUTPUT_DIR

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="us-ascii"?>
+
+<application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" id="application">
+
+  <!-- =============================================================== -->
+  <!-- =====                 JOB TEMPLATES                        ==== -->
+  <!-- =============================================================== -->
+
+  <jobTemplates>
+
+    <!-- Job template "SplitFiles"
+    <jobTemplate id="SplitFiles">
+        <streamingExecutable>/application/splitfiles/run.sh</streamingExecutable>
+        <defaultParameters>
+	<parameter id="mode" abstract="Input mode to use for generating the fields. This can be shapefile to read from the inputlist or geojson to accept the content of the geojson parameter" title="Mode" scope="runtime">geojson</parameter>
+	<parameter id="geojson" abstract="Feature collection containing features for crop phenology calculation" title="GeoJSON" scope="runtime">{"type": "FeatureCollection", "features": [{"type": "Feature", "geometry": {"type": "Polygon", "coordinates": [[[5.049446, 51.187325], [5.049521, 51.186882], [5.050752, 51.187126], [5.050599, 51.187487], [5.04985, 51.187354], [5.04958, 51.18743], [5.049446, 51.187325]]]}, "properties": {}}, {"type": "Feature", "geometry": {"type": "Polygon", "coordinates": [[[5.096429, 51.271354], [5.096554, 51.271567], [5.096305, 51.27164], [5.096268, 51.271574], [5.09614, 51.271617], [5.096044, 51.271461], [5.096429, 51.271354]]]}, "properties": {}}]}</parameter>
+        <parameter id="max_size" abstract="Maximum collection sizes for splitting up input feature collection" title="Collection size" scope="runtime">50</parameter>
+	</defaultParameters>
+		
+        <defaultJobconf>
+            <property id="ciop.job.max.tasks">1</property>
+        </defaultJobconf>
+    </jobTemplate>-->
+
+    <!-- Job template "CalculatePhenology" -->
+    <jobTemplate id="CalculatePhenology">
+        <streamingExecutable>/application/phenology/run.sh</streamingExecutable>
+        <defaultParameters>
+	    <parameter id="season_start_start" abstract="Date that indicates the begin of the start season interval" title="Season Start Begin" scope="runtime">2018-04-02</parameter>
+  	    <parameter id="season_start_end" abstract="Date that indicates the end of the start season interval" title="Season Start End" scope="runtime">2018-06-10</parameter>
+	    <parameter id="season_mid_start" abstract="Date that indicates the begin of the mid season interval" title="Season Mid Begin" scope="runtime">2018-06-10</parameter>
+            <parameter id="season_mid_end" abstract="Date that indicates the end of the mid season interval" title="Season Mid End" scope="runtime">2018-09-01</parameter>
+	    <parameter id="season_end_start" abstract="Date that indicates the begin of the end season interval" title="Season End Begin" scope="runtime">2018-09-01</parameter>
+            <parameter id="season_end_end" abstract="Date that indicates the end of the end season interval" title="Season End End" scope="runtime">2018-12-31</parameter>
+	   <parameter id="start_threshold" abstract="Threshold to use at the start of the season" title="Start season treshold" scope="runtime">10.0</parameter>
+	    <parameter id="end_threshold" abstract="Threshold to use at the end of the season" title="End season treshold" scope="runtime">10.0</parameter>
+        </defaultParameters>
+        <defaultJobconf>
+            <!--<property id="mapred.task.timeout">10000000</property>-->
+        </defaultJobconf>
+    </jobTemplate>
+     <!-- Job template "MergeFiles" -->
+    <jobTemplate id="MergeFiles">
+        <streamingExecutable>/application/mergefiles/run.sh</streamingExecutable>
+        <defaultParameters>
+      	   <parameter id="format" abstract="Output format to generate (geojson or tif)" title="Output format" scope="runtime">geojson</parameter>
+        </defaultParameters>
+        <defaultJobconf>
+            <property id="ciop.job.max.tasks">1</property>
+        </defaultJobconf>
+    </jobTemplate>
+  </jobTemplates>
+
+  <!-- =============================================================== -->
+  <!-- =====                     WORKFLOW                         ==== -->
+  <!-- =============================================================== -->
+
+  <workflow id="sentinel2-cropphenology" title="Sentinel2 Crop Phenology Workflow" abstract="Workflow that uses VITO timeseries component to calculate crop phenology parameters based on Sentinel2 timeseries">
+    <workflowVersion>1.0</workflowVersion>
+    <!-- <node id="SplitFilesNode">
+      <job id="SplitFiles"/>
+      <sources>
+       <source refid="file:urls">/application/inputs/list</source>
+      </sources>
+    </node>-->
+    <node id="CalculatePhenologyNode">
+      <job id="CalculatePhenology"/>
+      <sources>
+       <!--<source refid="wf:node">SplitFilesNode</source>-->
+  	<source id="geometries" title="Geometries" abstract="Geometries (base64 encoded)" refid="string:list" scope="runtime"></source>
+      </sources>
+    </node>
+    <node id="MergeFilesNode">
+      <job id="MergeFiles"/>
+      <sources>
+       <source refid="wf:node">CalculatePhenologyNode</source>
+      </sources>
+    </node>
+
+
+  </workflow>
+
+</application>
