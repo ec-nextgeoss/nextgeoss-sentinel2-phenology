@@ -60,7 +60,7 @@ do
 	ciop-log "INFO" "Input decoded to file ${DECODED_INPUT}"
 	cat ${DECODED_INPUT}
 	
-	COUNT+=1		
+	((COUNT+=1))
 	main ${DECODED_INPUT}
 done
 
