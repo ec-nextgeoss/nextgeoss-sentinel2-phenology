@@ -11,12 +11,12 @@
     <version>3.0.1-docker</version>
   </parent>
   <description>This is a short description</description>
-  <version>1.0</version>
+  <version>1.1</version>
   <properties>
     <summary>NextGEOSS workflow for calculating crop phenology parameters</summary>
     <description>This is a short description</description>
-    <community>community</community>
-    <yumRepo>community</yumRepo>
+    <community>ec-nextgeoss</community>
+    <yumRepo>ec-nextgeoss</yumRepo>
   </properties>
   <scm>
     <connection>scm:git:ssh://git@github.com/community/nextgeoss-phenology</connection>
