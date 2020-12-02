@@ -1,3 +1,4 @@
+
 # ---------------------------------------------------------
 #                 Calculate phenology params
 #
@@ -10,6 +11,8 @@
 import sys
 import logging
 from logging.config import fileConfig
+
+#sys.path.append('/opt/anaconda/envs/phenology3/site-packages')
 
 import argparse
 import datetime

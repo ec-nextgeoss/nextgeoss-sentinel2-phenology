@@ -38,9 +38,9 @@ function main() {
 	ls -al $TMPDIR/input
 
 	ciop-log "INFO" "	Execute phenology calculation"
-	docker run --rm  -v ${TMPDIR}:/tmp                                            \
-                vito-docker-private.artifactory.vgt.vito.be/nextgeoss-cropphenology:1.0.19           \
-                python3 calculate_phenology_params_json.py -sS $SS -sE $SE -mS $MS -mE $ME -eS $ES -eE $EE -sT $ST -eT $ET -i /tmp/input/$INPUT_FILENAME -o /tmp/shapes/$INPUT_BASENAME
+        source activate phenology
+        cd ${_CIOP_APPLICATION_PATH}/phenology
+	python calculate_phenology.py -sS $SS -sE $SE -mS $MS -mE $ME -eS $ES -eE $EE -sT $ST -eT $ET -i $TMPDIR/input/$INPUT_FILENAME -o $TMPDIR/shapes/$INPUT_BASENAME
 
 	echo "TMPDIR OUTPUT:"
 	ls -al "$TMPDIR/shapes"

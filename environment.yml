@@ -1,0 +1,15 @@
+name: phenology
+channels:
+  - defaults
+dependencies:
+  - python=3.6.8
+  - geopandas
+  - requests
+  - geojson
+  - tensorflow=2.0.0
+  - numpy
+  - pip
+  - pip:
+     - --extra-index-url https://janssenb@artifactory.vgt.vito.be/api/pypi/python-packages-local/simple 
+     - cropsar==1.4.2.20200803.81
+prefix: /opt/anaconda/envs/phenology
