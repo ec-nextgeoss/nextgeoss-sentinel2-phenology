@@ -1,4 +1,3 @@
-#!/opt/anaconda/envs/phenology/bin/python
 
 # Merge phenology results
 #
@@ -14,7 +13,7 @@ from logging.config import fileConfig
 import argparse
 import datetime
 
-sys.path.append('/opt/anaconda/envs/phenology/site-packages')
+#sys.path.append('/opt/anaconda/envs/phenology3/site-packages')
 import geopandas as gpd
 import json
 import subprocess
