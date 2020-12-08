@@ -48,7 +48,9 @@
                   <!-- Set here the dependencies installed with 'sudo yum install'-->
                   <requires>
                     <require>bash</require>
+ 	    	    <require>miniconda</require>
                   </requires>
+		  <script>conda update conda -y &amp;&amp; conda env create --file /application/dependencies/environment.yml</script>
                 </configuration>
               </execution>
             </executions>
