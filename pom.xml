@@ -11,7 +11,7 @@
     <version>2.0.0</version>
   </parent>
   <description>This is a short description</description>
-  <version>1.4-SNAPSHOT</version>
+  <version>1.4</version>
   <properties>
     <summary>NextGEOSS workflow for calculating crop phenology parameters</summary>
     <description>This is a short description</description>
@@ -48,9 +48,9 @@
                   <!-- Set here the dependencies installed with 'sudo yum install'-->
                   <requires>
                     <require>bash</require>
- 	    	    <require>miniconda</require>
+                    <require>miniconda</require>
                   </requires>
-		  <script>conda update conda -y &amp;&amp; conda env create --file /application/dependencies/environment.yml</script>
+                  <script>conda update conda -y &amp;&amp; conda env create --file /application/dependencies/environment.yml</script>
                 </configuration>
               </execution>
             </executions>
